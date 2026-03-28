@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazon Winning Product Finder Bot</title>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <a href="#" class="logo" id="home-btn">
+                <div class="logo-icon"></div>
+                <h1>AMZ Finder Bot</h1>
+            </a>
+            <nav>
+                <a href="#" class="nav-item active" id="nav-dashboard">Dashboard</a>
+                <a href="#" class="nav-item" id="nav-saved-niches">My Saved Niches (<span id="saved-count">0</span>)</a>
+                <a href="#" class="nav-item">Settings</a>
+            </nav>
+            <div class="bot-status">
+                <span class="status-indicator online"></span>
+                <span>Bot Online</span>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <header class="top-bar">
+                <h2>Product Research Dashboard</h2>
+                <div class="user-profile">
+                    <img src="https://ui-avatars.com/api/?name=New+Seller&background=random" alt="User Profile" class="avatar">
+                </div>
+            </header>
+
+            <section class="hero-section" id="hero-section">
+                <!-- Landing view text -->
+                <div class="hero-content">
+                    <h1>Autonomous FBA Agent</h1>
+                    
+                    <div class="agent-dashboard glassmorphism">
+                        <div class="agent-stats">
+                            <div class="stat"><span>Last Background Scan:</span> <strong class="glow-text">2 Hrs Ago</strong></div>
+                            <div class="stat"><span>Next Global Cycle:</span> <strong class="text-muted">22 Hrs</strong></div>
+                            <div class="stat"><span>Targeting Targets:</span> <strong class="text-accent">Best Sellers • Movers & Shakers • New Releases</strong></div>
+                        </div>
+                        
+                        <div class="agent-terminal">
+                            <div class="terminal-header">
+                                <div class="dots"><span class="dot red"></span><span class="dot yellow"></span><span class="dot green"></span></div>
+                                <span class="term-title">system_crawler.exe</span>
+                            </div>
+                            <div class="terminal-body" id="idle-log-feed">
+                               <p class="log-line">> [SYSTEM] Booting AI Core...</p>
+                               <p class="log-line">> [CACHED] 150 elite niches retrieved from last 24hr cycle.</p>
+                               <p class="log-line blinking-cursor">_</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button class="btn-primary" id="start-search-btn">
+                        <span class="btn-text">Extract Winning Niches</span>
+                        <div class="btn-glow"></div>
+                    </button>
+
+                    <!-- Loading Sequence Area -->
+                    <div id="loading-sequence" class="hidden">
+                        <div class="loader-terminal">
+                            <p id="loading-text" class="log-line">[SYSTEM] Syncing algorithm parameters...</p>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar" id="progress-bar"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Results Section -->
+            <section class="results-section hidden" id="results-section">
+                <div class="results-header">
+                    <h3>Found Winning Products</h3>
+                    <p>Based on your strict criteria for beginner sellers.</p>
+                </div>
+                <div class="product-grid" id="product-grid">
+                    <!-- Cards will be injected by JS -->
+                </div>
+                <div class="pagination-container" id="pagination-container">
+                    <button id="generate-more-btn" class="action-btn">Generate More Products</button>
+                    <p id="exhausted-msg" class="hidden">Memory Exhausted. All 150 unique products have been shown!</p>
+                </div>
+            </section>
+
+            <!-- Saved Niches Section -->
+            <section class="saved-niches-section hidden" id="saved-niches-section">
+                <div class="results-header">
+                    <h3>My Saved Niches</h3>
+                    <p>Your permanently curated list of winning Amazon product ideas.</p>
+                </div>
+                <div class="product-grid" id="saved-grid">
+                    <!-- Saved cards injected here -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Product Card Template Definition (used by JS) -->
+    <template id="product-card-template">
+        <div class="product-card glassmorphism">
+            <div class="card-header">
+                <div>
+                    <a href="#" class="amazon-link product-name-link" target="_blank" rel="noopener noreferrer">
+                        <h4 class="product-name"></h4>
+                    </a>
+                    <div class="card-badges">
+                        <span class="badge region-badge"></span>
+                        <span class="badge source-badge"></span>
+                    </div>
+                </div>
+                <div class="badge-container"></div>
+            </div>
+            
+            <div class="price-section">
+                <span class="price-label">Est. Selling Price:</span>
+                <span class="est-price"></span>
+            </div>
+
+            <div class="card-body">
+                <div class="info-group">
+                    <strong>Why it wins:</strong> 
+                    <span class="why-wins"></span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-box demand">
+                        <span>Demand Signal</span>
+                        <strong class="demand-signal"></strong>
+                    </div>
+                    <div class="stat-box competition">
+                        <span>Competition</span>
+                        <strong class="competition-signal"></strong>
+                    </div>
+                </div>
+                
+                <div class="advanced-metrics">
+                    <span class="metric-chip" title="Shipping Weight"><span class="icon">📦</span> <span class="weight-val"></span></span>
+                    <span class="metric-chip" title="Market Trend"><span class="icon">📈</span> <span class="trend-val"></span></span>
+                    <span class="metric-chip" title="Top Brand Monopoly Share"><span class="icon">👑</span> <span class="monopoly-val"></span></span>
+                    <span class="metric-chip" title="Price Stability"><span class="icon">💲</span> <span class="price-val"></span></span>
+                    <span class="metric-chip" title="Amazon Basics Safe"><span class="icon">🚫</span> AMZ Basics: <span class="amz-val"></span></span>
+                    <span class="metric-chip" title="Restricted Category Safe"><span class="icon">✅</span> <span class="cat-val"></span></span>
+                    <span class="metric-chip" title="Net Margin"><span class="icon">💰</span> <span class="margin-val"></span></span>
+                    <span class="metric-chip" title="Top 10 Competition Reviews"><span class="icon">⭐</span> <span class="reviews-val"></span></span>
+                    <span class="metric-chip" title="Price Saturation Gap"><span class="icon">📉</span> <span class="gap-val"></span></span>
+                    <span class="metric-chip" title="Product Variations"><span class="icon">🎨</span> Variations: <span class="variation-val"></span></span>
+                </div>
+
+                <div class="info-group">
+                    <strong>Profit Potential:</strong> 
+                    <span class="profit-potential"></span>
+                </div>
+                <div class="info-group highlight">
+                    <strong>Differentiation Angle:</strong> 
+                    <span class="diff-angle"></span>
+                </div>
+                <div class="info-group risk">
+                    <strong>Main Risks:</strong> 
+                    <span class="main-risks"></span>
+                </div>
+            </div>
+            <div class="card-footer">
+                <span class="seller-type">Best for: <strong></strong></span>
+                <div class="footer-actions">
+                    <button class="btn-save" title="Save this Niche">❤️ Save</button>
+                    <a href="#" class="amazon-link btn-secondary" target="_blank" rel="noopener noreferrer">View on Amazon</a>
+                </div>
+            </div>
+        </div>
+    </template>
+
+    <script src="./mockData.js"></script>
+    <script src="./app.js"></script>
+</body>
+</html>
